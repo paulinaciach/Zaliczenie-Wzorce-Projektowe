@@ -1,6 +1,10 @@
 package com.company;
-
 import java.util.ArrayList;
+
+/**
+ * Implementacja wzorca projektowego Budowniczy
+ *
+ **/
 
 public class Budowniczy {
 
