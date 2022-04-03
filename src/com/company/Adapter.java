@@ -6,12 +6,13 @@ package com.company;
  * brak metody wirtualnej, w Jabvie z zalozenia metody sa wirtualne z kilkoma wyjatkami
  **/
 
-public class AdapterMain {
+public class Adapter extends ElementDocelowy{
 
-    public static void main(String[] args) {
+    private Adaptowany adaptowany = new Adaptowany();
 
-        ElementDocelowy elementDocelowy = new Adapter();
-        elementDocelowy.MetodaA();
+    @Override
+    public void MetodaA() {
+        adaptowany.MetodaAdaptowanego();
     }
 }
 
@@ -29,13 +30,11 @@ class Adaptowany{
     }
 
 }
+class AdapterMain {
 
-class Adapter extends ElementDocelowy{
+    public static void main(String[] args) {
 
-    private Adaptowany adaptowany = new Adaptowany();
-
-    @Override
-    public void MetodaA() {
-        adaptowany.MetodaAdaptowanego();
+        ElementDocelowy elementDocelowy = new Adapter();
+        elementDocelowy.MetodaA();
     }
 }
