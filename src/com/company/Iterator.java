@@ -1,111 +1,100 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.List;
 
-
-interface Iterator< E >{
-    boolean hasNext();
-    E next();
+abstract class Iterator
+{
+    public abstract Object Pierwszy();
+    public abstract Object Nastepny();
+    public abstract Boolean CzyKoniec();
+    public abstract Object PobierzElement();
 }
 
-class ArrayIterator< E > implements Iterator {
+class SpecyficznyIterator extends Iterator
+{
+    public SpecyficznyIterator(SpecyficznyKontener kontener) {
+        this.kontener = kontener;
+    }
 
-    int posistion = 0;
-    E[] items;
+    private SpecyficznyKontener kontener;
+    private int obecny = 0;
 
-    public ArrayIterator(E[] items){
-        this.items = items;
+    @Override
+    public Object Pierwszy() {
+        return kontener.getElementy().get(0);
     }
 
     @Override
-    public boolean hasNext(){
-        if (posistion >= items.length || items[posistion] == null){
-            return false;
+    public Object Nastepny() {
+        Object ret = null;
+        if (obecny < kontener.Ilosc() - 1)
+        {
+            ret = kontener.getElementy().get(++obecny);
         }
-        return true;
+
+        return ret;
     }
 
     @Override
-    public E next(){
-        E item = items[posistion];
-        posistion++;
-        return item;
+    public Boolean CzyKoniec() {
+        return obecny >= kontener.Ilosc();
+    }
+
+    @Override
+    public Object PobierzElement() {
+        return kontener.getElementy().get(obecny);
+    }
+
+}
+
+abstract class Kontener
+{
+    public abstract Iterator StworzIterator();
+}
+
+class SpecyficznyKontener extends Kontener
+{
+    public ArrayList getElementy() {
+        return elementy;
+    }
+
+    public void setElementy(ArrayList elementy) {
+        this.elementy = elementy;
+    }
+
+    public ArrayList<String> elementy = new ArrayList<String>();
+
+    @Override
+    public Iterator StworzIterator() {
+        return (Iterator) new SpecyficznyIterator(this);
+    }
+
+    public int Ilosc()
+    {
+       return elementy.size();
     }
 }
 
+class IteratorMain{
+    public static void main(String[] args) {
+        SpecyficznyKontener kontenter = new SpecyficznyKontener();
+        kontenter.elementy.add(0, "Element A");
+        kontenter.elementy.add(1, "Element B");
+        kontenter.elementy.add(2, "Element C");
+        kontenter.elementy.add(3, "Element D");
 
-class ListIterator< E > implements Iterator {
 
-    int posistion = 0;
-    List< E > items;
 
-    public ListIterator(List< E > items){
-        this.items = items;
-    }
+        Iterator iterator = kontenter.StworzIterator();
 
-    @Override
-    public boolean hasNext(){
-        if (posistion >= items.size() || items.get(posistion) == null){
-            return false;
+        System.out.println("Iteracja kolekcji:");
+
+        Object element = iterator.Pierwszy();
+        while (element != null)
+        {
+            System.out.println((element));
+            element = iterator.Nastepny();
         }
-        return true;
-    }
 
-    @Override
-    public E next(){
-        E item = items.get(posistion);
-        posistion++;
-        return item;
-    }
-}
-
-
-class DesignPatternsIterator{
-
-
-    private static Integer[] intArray = new Integer[10];
-    private static ArrayList< Integer > intList = new ArrayList< Integer >();
-
-    public static void main(String[] args){
-
-        intArray[0] = 1;
-        intArray[1] = 11;
-        intArray[2] = 21;
-        intArray[3] = 31;
-        intArray[4] = 41;
-        intArray[5] = 51;
-        intArray[6] = 61;
-        intArray[7] = 71;
-        intArray[8] = 81;
-        intArray[9] = 91;
-
-        intList.add(1);
-        intList.add(11);
-        intList.add(21);
-        intList.add(31);
-        intList.add(41);
-        intList.add(51);
-        intList.add(61);
-        intList.add(71);
-        intList.add(81);
-
-
-        printData(new ArrayIterator(intArray), "Tablica");
-        printData(new ListIterator(intList), "Lista");
-    }
-
-
-    private static void printData(Iterator iterator, String info){
-
-        if (iterator != null){
-
-            System.out.println("Dane: " + info);
-            while (iterator.hasNext()){
-                System.out.print(iterator.next() + ", ");
-            }
-            System.out.println("");
-            System.out.println("");
-        }
     }
 }
